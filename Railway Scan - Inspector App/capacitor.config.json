@@ -1,0 +1,30 @@
+{
+  "appId": "com.railtrack.inspector",
+  "appName": "RailTrack Inspector",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#1d4ed8",
+      "showSpinner": false,
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP"
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#1d4ed8"
+    },
+    "Camera": {
+      "permissions": ["camera"]
+    }
+  },
+  "ios": {
+    "scheme": "railtrack"
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

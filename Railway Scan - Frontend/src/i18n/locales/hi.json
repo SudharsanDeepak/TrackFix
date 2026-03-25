@@ -1,0 +1,74 @@
+{
+  "app": {
+    "name": "रेलट्रैक एआई",
+    "tagline": "रेलवे ट्रैक फिटिंग जीवनचक्र और भविष्यवाणी निगरानी"
+  },
+  "auth": {
+    "login": "लॉगिन",
+    "register": "पंजीकरण",
+    "logout": "लॉगआउट",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "confirmPassword": "पासवर्ड की पुष्टि करें",
+    "name": "पूरा नाम",
+    "role": "भूमिका",
+    "continueWithGoogle": "Google के साथ जारी रखें",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "dontHaveAccount": "खाता नहीं है?",
+    "alreadyHaveAccount": "पहले से खाता है?",
+    "signIn": "साइन इन करें",
+    "signUp": "साइन अप करें"
+  },
+  "nav": {
+    "dashboard": "डैशबोर्ड",
+    "qrManagement": "QR प्रबंधन",
+    "vendors": "विक्रेता",
+    "inspections": "निरीक्षण",
+    "predictions": "एआई भविष्यवाणी",
+    "reports": "रिपोर्ट",
+    "integrations": "एकीकरण",
+    "profile": "प्रोफ़ाइल",
+    "settings": "सेटिंग्स"
+  },
+  "common": {
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "view": "देखें",
+    "search": "खोजें",
+    "filter": "फ़िल्टर",
+    "export": "निर्यात",
+    "import": "आयात",
+    "refresh": "रीफ्रेश",
+    "loading": "लोड हो रहा है...",
+    "noData": "कोई डेटा उपलब्ध नहीं",
+    "error": "एक त्रुटि हुई",
+    "success": "सफलता",
+    "confirm": "पुष्टि करें",
+    "back": "वापस",
+    "next": "अगला",
+    "submit": "जमा करें",
+    "clear": "साफ़ करें",
+    "selectAll": "सभी चुनें",
+    "actions": "क्रियाएं"
+  },
+  "dashboard": {
+    "title": "डैशबोर्ड",
+    "overview": "अवलोकन",
+    "totalFittings": "कुल फिटिंग",
+    "activeFittings": "सक्रिय फिटिंग",
+    "totalInspections": "कुल निरीक्षण",
+    "highRiskFittings": "उच्च जोखिम फिटिंग",
+    "vendorPerformance": "विक्रेता प्रदर्शन",
+    "zoneFailureRate": "क्षेत्र विफलता दर",
+    "warrantyExpiry": "वारंटी समाप्ति",
+    "recentActivity": "हाल की गतिविधि"
+  },
+  "roles": {
+    "ADMIN": "प्रशासक",
+    "VENDOR": "विक्रेता",
+    "DEPOT_OFFICER": "डिपो अधिकारी",
+    "INSPECTOR": "निरीक्षक"
+  }
+}

@@ -1,0 +1,7 @@
+export { default as ZoneTrendsWidget } from './ZoneTrendsWidget'
+export { default as DefectRatesWidget } from './DefectRatesWidget'
+export { default as VendorMetricsWidget } from './VendorMetricsWidget'
+export { default as DepotRankingsWidget } from './DepotRankingsWidget'
+export { default as AnalyticsAccessWidget } from './AnalyticsAccessWidget'
+export { default as CriticalAlertsWidget } from './CriticalAlertsWidget'
+export { default as ResourceUtilizationWidget } from './ResourceUtilizationWidget'

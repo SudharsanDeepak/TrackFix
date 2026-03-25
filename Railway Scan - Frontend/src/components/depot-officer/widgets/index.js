@@ -1,0 +1,7 @@
+export { default as QRGenerationStatsWidget } from './QRGenerationStatsWidget'
+export { default as InspectionCompletionWidget } from './InspectionCompletionWidget'
+export { default as PendingApprovalsWidget } from './PendingApprovalsWidget'
+export { default as RecentDefectsWidget } from './RecentDefectsWidget'
+export { default as InventoryStatusWidget } from './InventoryStatusWidget'
+export { default as QualityMetricsWidget } from './QualityMetricsWidget'
+export { default as QuickActionsWidget } from './QuickActionsWidget'

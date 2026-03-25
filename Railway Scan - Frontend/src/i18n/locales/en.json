@@ -1,0 +1,74 @@
+{
+  "app": {
+    "name": "RailTrack AI",
+    "tagline": "Railway Track Fitting Lifecycle & Predictive Monitoring"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "name": "Full Name",
+    "role": "Role",
+    "continueWithGoogle": "Continue with Google",
+    "forgotPassword": "Forgot Password?",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign In",
+    "signUp": "Sign Up"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "qrManagement": "QR Management",
+    "vendors": "Vendors",
+    "inspections": "Inspections",
+    "predictions": "AI Predictions",
+    "reports": "Reports",
+    "integrations": "Integrations",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "noData": "No data available",
+    "error": "An error occurred",
+    "success": "Success",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "clear": "Clear",
+    "selectAll": "Select All",
+    "actions": "Actions"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "overview": "Overview",
+    "totalFittings": "Total Fittings",
+    "activeFittings": "Active Fittings",
+    "totalInspections": "Total Inspections",
+    "highRiskFittings": "High Risk Fittings",
+    "vendorPerformance": "Vendor Performance",
+    "zoneFailureRate": "Zone Failure Rate",
+    "warrantyExpiry": "Warranty Expiry",
+    "recentActivity": "Recent Activity"
+  },
+  "roles": {
+    "ADMIN": "Administrator",
+    "VENDOR": "Vendor",
+    "DEPOT_OFFICER": "Depot Officer",
+    "INSPECTOR": "Inspector"
+  }
+}

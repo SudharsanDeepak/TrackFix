@@ -1,0 +1,6 @@
+export { default as ActiveInspectionsWidget } from './ActiveInspectionsWidget'
+export { default as QRScannerWidget } from './QRScannerWidget'
+export { default as RecentInspectionsWidget } from './RecentInspectionsWidget'
+export { default as PendingDefectsWidget } from './PendingDefectsWidget'
+export { default as DailyStatsWidget } from './DailyStatsWidget'
+export { default as QuickActionsWidget } from './QuickActionsWidget'
