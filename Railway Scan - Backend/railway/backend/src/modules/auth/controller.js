@@ -73,9 +73,9 @@ class AuthController {
       userAgent: req.get('user-agent'),
     });
 
-    // Detect mobile app request via state param or user-agent
-    const isMobile = req.query.state === 'mobile' ||
-      (req.get('user-agent') || '').toLowerCase().includes('capacitor')
+    // Detect mobile: state param comes back from Google OAuth flow
+    const state = req.query.state || req.session?.oauthState || 'web'
+    const isMobile = state === 'mobile'
 
     const callbackBase = isMobile
       ? `${process.env.MOBILE_APP_SCHEME || 'railtrack'}://auth/callback`

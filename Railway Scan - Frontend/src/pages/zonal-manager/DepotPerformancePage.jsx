@@ -43,87 +43,44 @@ const DepotPerformancePage = () => {
   const [sortOrder, setSortOrder] = useState('desc')
   const [loading, setLoading] = useState(false)
   const [comparisonView, setComparisonView] = useState('side-by-side')
+  const [apiDepotData, setApiDepotData] = useState([])
 
-  // Mock data - in real implementation, this would come from API
+  // Fetch real depot performance data
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        const { default: zonalManagerService } = await import('../../services/zonalManagerService')
+        const res = await zonalManagerService.getDepotPerformance({ days: timeRange })
+        const items = Array.isArray(res) ? res : res?.data || res?.depots || []
+        if (items.length > 0) setApiDepotData(items)
+      } catch { /* use fallback */ } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [timeRange])
+
+  // Mock data as fallback when API returns empty
   const depotData = useMemo(
-    () => [
-      {
-        id: 'depot-a',
-        name: 'Depot A',
-        location: 'North Zone',
-        inspections: 456,
-        completed: 420,
-        defects: 34,
-        avgResponseTime: 2.1,
-        efficiency: 92,
-        inspectors: 12,
-        qrCodes: 1250,
-        trend: 'up',
-        trendValue: 5.2,
-        color: '#9333EA',
-      },
-      {
-        id: 'depot-b',
-        name: 'Depot B',
-        location: 'South Zone',
-        inspections: 389,
-        completed: 346,
-        defects: 28,
-        avgResponseTime: 2.8,
-        efficiency: 89,
-        inspectors: 10,
-        qrCodes: 980,
-        trend: 'up',
-        trendValue: 3.1,
-        color: '#3B82F6',
-      },
-      {
-        id: 'depot-c',
-        name: 'Depot C',
-        location: 'East Zone',
-        inspections: 512,
-        completed: 481,
-        defects: 41,
-        avgResponseTime: 1.9,
-        efficiency: 94,
-        inspectors: 15,
-        qrCodes: 1450,
-        trend: 'up',
-        trendValue: 7.8,
-        color: '#10B981',
-      },
-      {
-        id: 'depot-d',
-        name: 'Depot D',
-        location: 'West Zone',
-        inspections: 423,
-        completed: 368,
-        defects: 37,
-        avgResponseTime: 3.2,
-        efficiency: 87,
-        inspectors: 11,
-        qrCodes: 1100,
-        trend: 'down',
-        trendValue: -2.4,
-        color: '#F59E0B',
-      },
-      {
-        id: 'depot-e',
-        name: 'Depot E',
-        location: 'Central Zone',
-        inspections: 398,
-        completed: 362,
-        defects: 31,
-        avgResponseTime: 2.5,
-        efficiency: 91,
-        inspectors: 13,
-        qrCodes: 1180,
-        trend: 'up',
-        trendValue: 4.5,
-        color: '#EF4444',
-      },
+    () => apiDepotData.length > 0 ? apiDepotData.map((d, i) => ({
+      id: d._id || d.depotId || `depot-${i}`,
+      name: d.name || d.depotId || `Depot ${i + 1}`,
+      location: d.location || d.zone || '—',
+      inspections: d.totalInspections || d.inspections || 0,
+      completed: d.completedInspections || d.completed || 0,
+      defects: d.totalDefects || d.defects || 0,
+      avgResponseTime: d.avgResponseTime || 0,
+      efficiency: d.efficiency || d.completionRate || 0,
+      inspectors: d.inspectorCount || d.inspectors || 0,
+      qrCodes: d.qrCodes || 0,
+      trend: 'up',
+      trendValue: d.trend || 0,
+      color: ['#9333EA', '#3B82F6', '#10B981', '#F59E0B', '#EF4444'][i % 5],
+    })) : [
+      { id: 'depot-a', name: 'No Data', location: 'N/A', inspections: 0, completed: 0, defects: 0, avgResponseTime: 0, efficiency: 0, inspectors: 0, qrCodes: 0, trend: 'up', trendValue: 0, color: '#9333EA' },
     ],
-    []
+    [apiDepotData]
   )
 
   // Performance trend data over time

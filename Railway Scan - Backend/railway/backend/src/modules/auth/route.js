@@ -24,15 +24,20 @@ router.get('/profile', authenticate, authController.getProfile);
 
 router.post('/google', loginLimiter, validate(googleLoginSchema), authController.googleLogin);
 
+// Single redirect route — accepts optional ?state=mobile query param for mobile deeplink
 router.get(
   '/google/redirect',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
-);
-
-// Mobile app OAuth redirect — passes state=mobile so callback knows to use deeplink
-router.get(
-  '/google/redirect/mobile',
-  passport.authenticate('google', { scope: ['profile', 'email'], state: 'mobile' })
+  (req, res, next) => {
+    // Store state in session so callback can read it
+    if (req.query.state) {
+      req.session = req.session || {}
+      req.session.oauthState = req.query.state
+    }
+    passport.authenticate('google', { 
+      scope: ['profile', 'email'],
+      state: req.query.state || 'web',
+    })(req, res, next)
+  }
 );
 
 router.get(

@@ -35,27 +35,43 @@ const ZoneAnalyticsPage = () => {
   const [selectedDepot, setSelectedDepot] = useState('all')
   const [comparisonPeriod, setComparisonPeriod] = useState('previous')
   const [loading, setLoading] = useState(false)
+  const [apiData, setApiData] = useState(null)
 
-  // Mock data - in real implementation, this would come from API
-  const inspectionTrendData = useMemo(
-    () => [
-      { date: 'Week 1', inspections: 245, defects: 23, completion: 92 },
-      { date: 'Week 2', inspections: 268, defects: 19, completion: 95 },
-      { date: 'Week 3', inspections: 289, defects: 31, completion: 88 },
-      { date: 'Week 4', inspections: 312, defects: 27, completion: 91 },
-    ],
-    []
-  )
+  // Fetch real data from API
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        const [trendsRes, defectRes] = await Promise.allSettled([
+          import('../../services/zonalManagerService').then(m => m.default.getInspectionTrends({ days: timeRange })),
+          import('../../services/zonalManagerService').then(m => m.default.getDefectRateTrends({ days: timeRange })),
+        ])
+        setApiData({
+          trends: trendsRes.status === 'fulfilled' ? trendsRes.value : null,
+          defects: defectRes.status === 'fulfilled' ? defectRes.value : null,
+        })
+      } catch { /* use fallback data */ } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [timeRange])
 
-  const depotPerformanceData = useMemo(
-    () => [
-      { depot: 'Depot A', inspections: 456, defects: 34, efficiency: 92 },
-      { depot: 'Depot B', inspections: 389, defects: 28, efficiency: 89 },
-      { depot: 'Depot C', inspections: 512, defects: 41, efficiency: 94 },
-      { depot: 'Depot D', inspections: 423, defects: 37, efficiency: 87 },
-    ],
-    []
-  )
+  // Use API data if available, otherwise use illustrative fallback
+  const inspectionTrendData = useMemo(() => {
+    const raw = apiData?.trends?.data || apiData?.trends
+    if (Array.isArray(raw) && raw.length > 0) return raw
+    return [
+      { date: 'Week 1', inspections: 0, defects: 0, completion: 0 },
+      { date: 'Week 2', inspections: 0, defects: 0, completion: 0 },
+      { date: 'Week 3', inspections: 0, defects: 0, completion: 0 },
+      { date: 'Week 4', inspections: 0, defects: 0, completion: 0 },
+    ]
+  }, [apiData])
+
+  const depotPerformanceData = useMemo(() => [
+    { depot: 'Loading...', inspections: 0, defects: 0, efficiency: 0 },
+  ], [])
 
   const defectCategoryData = useMemo(
     () => [
@@ -69,10 +85,9 @@ const ZoneAnalyticsPage = () => {
 
   const comparisonData = useMemo(
     () => [
-      { metric: 'Inspections', current: 1780, previous: 1654, change: 7.6 },
-      { metric: 'Defects', current: 140, previous: 168, change: -16.7 },
-      { metric: 'Completion Rate', current: 92.5, previous: 88.3, change: 4.8 },
-      { metric: 'Avg Response Time', current: 2.3, previous: 3.1, change: -25.8 },
+      { metric: 'Inspections', current: 0, previous: 0, change: 0 },
+      { metric: 'Defects', current: 0, previous: 0, change: 0 },
+      { metric: 'Completion Rate', current: 0, previous: 0, change: 0 },
     ],
     []
   )
@@ -105,11 +120,10 @@ const ZoneAnalyticsPage = () => {
   }
 
   const handleRefresh = () => {
+    setApiData(null)
     setLoading(true)
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000)
+    // Re-trigger useEffect by toggling timeRange
+    setTimeRange(t => t)
   }
 
   const handleDrillDown = dataPoint => {

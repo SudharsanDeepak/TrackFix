@@ -64,9 +64,9 @@ const LoginPage = () => {
       setGoogleLoading(true)
       setError(null)
 
-      // The backend Google OAuth redirect URL — passes state=mobile so
-      // the callback will redirect to railtrack://auth/callback instead of the web frontend
-      const googleAuthUrl = `${config.apiBaseUrl}/auth/google/redirect/mobile`
+      // Use the same /google/redirect endpoint — pass state=mobile so the
+      // callback redirects to railtrack://auth/callback instead of the web frontend
+      const googleAuthUrl = `${config.apiBaseUrl}/auth/google/redirect?state=mobile`
 
       // Try Capacitor Browser (native in-app browser) first
       try {

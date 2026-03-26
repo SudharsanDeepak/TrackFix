@@ -43,126 +43,46 @@ const VendorManagementPage = () => {
   const [sortOrder, setSortOrder] = useState('desc')
   const [loading, setLoading] = useState(false)
   const [filterStatus, setFilterStatus] = useState('all')
+  const [apiVendors, setApiVendors] = useState([])
 
-  // Mock vendor data - in real implementation, this would come from API
+  // Fetch real vendor data
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        const { default: zonalManagerService } = await import('../../services/zonalManagerService')
+        const res = await zonalManagerService.getVendors({ days: timeRange })
+        const items = Array.isArray(res) ? res : res?.data || res?.vendors || []
+        if (items.length > 0) setApiVendors(items)
+      } catch { /* use fallback */ } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [timeRange])
+
+  // Map API data to component format, fallback to empty
   const vendorData = useMemo(
-    () => [
-      {
-        id: 'vendor-1',
-        name: 'RailTech Solutions',
-        category: 'Equipment',
-        rating: 4.8,
-        totalOrders: 156,
-        completedOrders: 148,
-        pendingOrders: 8,
-        avgDeliveryTime: 3.2,
-        onTimeDelivery: 95,
-        qualityScore: 92,
-        costEfficiency: 88,
-        status: 'active',
-        trend: 'up',
-        trendValue: 5.2,
-        lastOrder: '2024-01-15',
-        totalValue: 2450000,
-        color: '#9333EA',
-      },
-      {
-        id: 'vendor-2',
-        name: 'TrackMaster Industries',
-        category: 'Maintenance',
-        rating: 4.5,
-        totalOrders: 203,
-        completedOrders: 189,
-        pendingOrders: 14,
-        avgDeliveryTime: 4.1,
-        onTimeDelivery: 93,
-        qualityScore: 89,
-        costEfficiency: 91,
-        status: 'active',
-        trend: 'up',
-        trendValue: 3.1,
-        lastOrder: '2024-01-18',
-        totalValue: 3120000,
-        color: '#3B82F6',
-      },
-      {
-        id: 'vendor-3',
-        name: 'SafeRail Components',
-        category: 'Safety Equipment',
-        rating: 4.9,
-        totalOrders: 98,
-        completedOrders: 96,
-        pendingOrders: 2,
-        avgDeliveryTime: 2.8,
-        onTimeDelivery: 98,
-        qualityScore: 96,
-        costEfficiency: 85,
-        status: 'active',
-        trend: 'up',
-        trendValue: 7.8,
-        lastOrder: '2024-01-20',
-        totalValue: 1890000,
-        color: '#10B981',
-      },
-      {
-        id: 'vendor-4',
-        name: 'QuickFix Supplies',
-        category: 'Spare Parts',
-        rating: 4.2,
-        totalOrders: 312,
-        completedOrders: 285,
-        pendingOrders: 27,
-        avgDeliveryTime: 5.3,
-        onTimeDelivery: 87,
-        qualityScore: 84,
-        costEfficiency: 94,
-        status: 'active',
-        trend: 'down',
-        trendValue: -2.4,
-        lastOrder: '2024-01-19',
-        totalValue: 1560000,
-        color: '#F59E0B',
-      },
-      {
-        id: 'vendor-5',
-        name: 'ElectroRail Systems',
-        category: 'Electronics',
-        rating: 4.6,
-        totalOrders: 127,
-        completedOrders: 119,
-        pendingOrders: 8,
-        avgDeliveryTime: 3.9,
-        onTimeDelivery: 94,
-        qualityScore: 90,
-        costEfficiency: 89,
-        status: 'active',
-        trend: 'up',
-        trendValue: 4.5,
-        lastOrder: '2024-01-17',
-        totalValue: 2780000,
-        color: '#EF4444',
-      },
-      {
-        id: 'vendor-6',
-        name: 'Legacy Rail Parts',
-        category: 'Equipment',
-        rating: 3.8,
-        totalOrders: 89,
-        completedOrders: 78,
-        pendingOrders: 11,
-        avgDeliveryTime: 6.2,
-        onTimeDelivery: 82,
-        qualityScore: 79,
-        costEfficiency: 86,
-        status: 'warning',
-        trend: 'down',
-        trendValue: -5.1,
-        lastOrder: '2024-01-10',
-        totalValue: 980000,
-        color: '#6B7280',
-      },
-    ],
-    []
+    () => apiVendors.length > 0 ? apiVendors.map((v, i) => ({
+      id: v._id || v.vendorId || `vendor-${i}`,
+      name: v.name || v.vendorName || `Vendor ${i + 1}`,
+      category: v.category || v.type || 'General',
+      rating: v.rating || v.averageRating || 0,
+      totalOrders: v.totalOrders || 0,
+      completedOrders: v.completedOrders || 0,
+      pendingOrders: v.pendingOrders || 0,
+      avgDeliveryTime: v.avgDeliveryTime || 0,
+      onTimeDelivery: v.onTimeDelivery || v.onTimeRate || 0,
+      qualityScore: v.qualityScore || 0,
+      costEfficiency: v.costEfficiency || 0,
+      status: v.status || 'active',
+      trend: 'up',
+      trendValue: v.trend || 0,
+      lastOrder: v.lastOrderDate || v.updatedAt || new Date().toISOString(),
+      totalValue: v.totalValue || 0,
+      color: ['#9333EA', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#6B7280'][i % 6],
+    })) : [],
+    [apiVendors]
   )
 
   // Performance trend data over time

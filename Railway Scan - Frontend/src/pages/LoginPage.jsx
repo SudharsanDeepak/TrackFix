@@ -123,7 +123,6 @@ const LoginPage = () => {
       toast.error(`Google login failed: ${error.error || 'Unknown error'}`)
     },
     scope: 'openid email profile',
-    flow: 'implicit',
   })
 
   const handleRoleSubmit = async () => {
