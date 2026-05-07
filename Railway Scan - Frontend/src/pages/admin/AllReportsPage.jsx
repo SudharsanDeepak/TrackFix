@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import apiClient from '../../api/client'
 import {
   FileText,
   Search,
@@ -61,82 +62,19 @@ const AllReportsPage = () => {
     { value: 'quarter', label: 'This Quarter' },
   ]
 
-  // Fetch reports
+  // Fetch reports from API (no sample/mock data)
   useEffect(() => {
     const fetchReports = async () => {
       setLoading(true)
       try {
-        // TODO: Replace with actual API call
-        // const data = await reportService.getAllReports()
-
-        // Mock data
-        const mockData = [
-          {
-            id: 'RPT-001',
-            title: 'Weekly Inspection Summary - Zone 1',
-            type: 'inspection',
-            zone: 'Zone 1',
-            depot: 'Depot A',
-            generatedBy: 'Sarah Officer',
-            generatedDate: '2024-01-20T10:00:00',
-            period: 'Jan 14 - Jan 20, 2024',
-            format: 'PDF',
-            size: '2.4 MB',
-          },
-          {
-            id: 'RPT-002',
-            title: 'Critical Defects Report - December 2023',
-            type: 'defect',
-            zone: 'Zone 2',
-            depot: 'Depot C',
-            generatedBy: 'Mike Manager',
-            generatedDate: '2024-01-15T14:30:00',
-            period: 'December 2023',
-            format: 'PDF',
-            size: '3.1 MB',
-          },
-          {
-            id: 'RPT-003',
-            title: 'Operational Performance - Q4 2023',
-            type: 'operational',
-            zone: 'Zone 1',
-            depot: 'Depot B',
-            generatedBy: 'Admin User',
-            generatedDate: '2024-01-10T09:15:00',
-            period: 'Q4 2023',
-            format: 'Excel',
-            size: '1.8 MB',
-          },
-          {
-            id: 'RPT-004',
-            title: 'Zone Analytics - Monthly Overview',
-            type: 'analytics',
-            zone: 'Zone 2',
-            depot: null,
-            generatedBy: 'Mike Manager',
-            generatedDate: '2024-01-05T16:45:00',
-            period: 'December 2023',
-            format: 'PDF',
-            size: '4.2 MB',
-          },
-          {
-            id: 'RPT-005',
-            title: 'System Audit Log - January 2024',
-            type: 'audit',
-            zone: null,
-            depot: null,
-            generatedBy: 'Admin User',
-            generatedDate: '2024-01-20T18:00:00',
-            period: 'Jan 1 - Jan 20, 2024',
-            format: 'CSV',
-            size: '856 KB',
-          },
-        ]
-
-        setReports(mockData)
-        setFilteredReports(mockData)
+        const res = await apiClient.get('/reports')
+        const items = (res && res.data) || []
+        setReports(items)
+        setFilteredReports(items)
       } catch (error) {
-        console.error('Failed to fetch reports:', error)
+        console.error('Failed to fetch reports from API:', error)
+        setReports([])
+        setFilteredReports([])
       } finally {
         setLoading(false)
       }

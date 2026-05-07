@@ -26,7 +26,7 @@ const SystemSettingsPage = () => {
 
   const [settings, setSettings] = useState({
     // General Settings
-    appName: 'RailTrack AI',
+    appName: 'RailTrack-FIX',
     appDescription: 'Railway Inspection Management System',
     timezone: 'UTC',
     dateFormat: 'MM/DD/YYYY',
@@ -37,7 +37,7 @@ const SystemSettingsPage = () => {
     emailPort: '587',
     emailUsername: 'noreply@railway.com',
     emailPassword: '',
-    emailFrom: 'RailTrack AI <noreply@railway.com>',
+    emailFrom: 'RailTrack-FIX <noreply@railway.com>',
     emailEncryption: 'tls',
 
     // Notification Settings

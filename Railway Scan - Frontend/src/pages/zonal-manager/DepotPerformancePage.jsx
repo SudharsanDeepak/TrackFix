@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import {
   Building2,
   TrendingUp,
@@ -83,91 +83,9 @@ const DepotPerformancePage = () => {
     [apiDepotData]
   )
 
-  // Performance trend data over time
-  const performanceTrendData = useMemo(
-    () => [
-      {
-        period: 'Week 1',
-        'Depot A': 88,
-        'Depot B': 85,
-        'Depot C': 90,
-        'Depot D': 82,
-        'Depot E': 87,
-      },
-      {
-        period: 'Week 2',
-        'Depot A': 90,
-        'Depot B': 87,
-        'Depot C': 92,
-        'Depot D': 84,
-        'Depot E': 89,
-      },
-      {
-        period: 'Week 3',
-        'Depot A': 91,
-        'Depot B': 88,
-        'Depot C': 93,
-        'Depot D': 86,
-        'Depot E': 90,
-      },
-      {
-        period: 'Week 4',
-        'Depot A': 92,
-        'Depot B': 89,
-        'Depot C': 94,
-        'Depot D': 87,
-        'Depot E': 91,
-      },
-    ],
-    []
-  )
-
-  // Radar chart data for multi-dimensional comparison
-  const radarComparisonData = useMemo(
-    () => [
-      {
-        metric: 'Efficiency',
-        'Depot A': 92,
-        'Depot B': 89,
-        'Depot C': 94,
-        'Depot D': 87,
-        'Depot E': 91,
-      },
-      {
-        metric: 'Quality',
-        'Depot A': 88,
-        'Depot B': 85,
-        'Depot C': 91,
-        'Depot D': 83,
-        'Depot E': 87,
-      },
-      {
-        metric: 'Speed',
-        'Depot A': 90,
-        'Depot B': 82,
-        'Depot C': 95,
-        'Depot D': 78,
-        'Depot E': 85,
-      },
-      {
-        metric: 'Resources',
-        'Depot A': 85,
-        'Depot B': 88,
-        'Depot C': 92,
-        'Depot D': 80,
-        'Depot E': 86,
-      },
-      {
-        metric: 'Compliance',
-        'Depot A': 94,
-        'Depot B': 91,
-        'Depot C': 96,
-        'Depot D': 89,
-        'Depot E': 93,
-      },
-    ],
-    []
-  )
+  // Use API-provided data for charts; avoid embedded sample data
+  const performanceTrendData = useMemo(() => [], [apiDepotData])
+  const radarComparisonData = useMemo(() => [], [apiDepotData])
 
   // Sorted depot data
   const sortedDepots = useMemo(() => {

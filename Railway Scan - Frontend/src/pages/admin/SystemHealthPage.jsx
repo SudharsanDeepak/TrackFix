@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import Button from '../../components/atoms/Button'
 import LoadingSpinner from '../../components/atoms/LoadingSpinner'
+import adminService from '../../services/adminService'
 
 const SystemHealthPage = () => {
   const [loading, setLoading] = useState(true)
@@ -53,49 +54,9 @@ const SystemHealthPage = () => {
 
   const fetchSystemHealth = async () => {
     try {
-      // TODO: Replace with actual API call
-      // const data = await systemService.getSystemHealth()
-
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      // Mock data
-      setSystemHealth({
-        overallStatus: 'healthy',
-        apiMetrics: {
-          avgResponseTime: 145,
-          p95ResponseTime: 320,
-          p99ResponseTime: 580,
-          requestsPerMinute: 1250,
-          errorRate: 0.8,
-          successRate: 99.2,
-        },
-        databaseMetrics: {
-          connectionPoolUsage: 65,
-          activeConnections: 13,
-          maxConnections: 20,
-          queryPerformance: 42,
-          slowQueries: 3,
-          cacheHitRate: 94.5,
-        },
-        serverMetrics: {
-          cpuUsage: 45.2,
-          memoryUsage: 68.7,
-          diskUsage: 52.3,
-          networkIn: 125.4,
-          networkOut: 89.2,
-          uptime: 99.8,
-        },
-        services: [
-          { name: 'API Server', status: 'healthy', responseTime: 145 },
-          { name: 'Database', status: 'healthy', responseTime: 42 },
-          { name: 'Storage Service', status: 'healthy', responseTime: 78 },
-          { name: 'Cache Server', status: 'warning', responseTime: 210 },
-          { name: 'Email Service', status: 'healthy', responseTime: 156 },
-          { name: 'Background Jobs', status: 'healthy', responseTime: null },
-        ],
-      })
-
+      const res = await adminService.getSystemHealth()
+      const payload = (res && res.data) || res || {}
+      setSystemHealth(payload)
       setLastUpdated(new Date())
     } catch (error) {
       console.error('Failed to fetch system health:', error)

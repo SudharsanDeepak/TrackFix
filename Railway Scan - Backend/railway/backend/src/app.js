@@ -28,7 +28,10 @@ app.use(helmet({
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*',
+    origin: function (origin, callback) {
+      // Allow all origins dynamically (including Capacitor's https://localhost)
+      callback(null, true);
+    },
     credentials: true,
     maxAge: 86400,
   })

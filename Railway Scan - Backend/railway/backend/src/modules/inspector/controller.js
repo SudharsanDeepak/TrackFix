@@ -26,6 +26,19 @@ class InspectorController {
   });
 
   /**
+   * GET /api/v1/inspector/inspections/:id
+   * Get a single inspection assigned to the authenticated inspector
+   */
+  getInspectionById = asyncHandler(async (req, res) => {
+    const inspection = await inspectorService.getInspectionById(
+      req.params.id,
+      req.user.id
+    );
+
+    ResponseFormatter.success(res, inspection, 'Inspection retrieved successfully');
+  });
+
+  /**
    * POST /api/v1/inspector/inspections
    * Start a new inspection
    */

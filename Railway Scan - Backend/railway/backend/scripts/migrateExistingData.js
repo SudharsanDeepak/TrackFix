@@ -286,7 +286,7 @@ async function generateMigrationReport() {
 }
 
 async function main() {
-  console.log('🚆 RailTrack AI - Data Migration Script');
+  console.log('🚆 RailTrack-FIX - Data Migration Script');
   console.log('═══════════════════════════════════════════════════════');
   
   if (isDryRun) {

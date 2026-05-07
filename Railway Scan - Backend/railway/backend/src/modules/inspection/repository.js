@@ -10,6 +10,17 @@ class InspectionRepository {
     return await Inspection.findById(id).populate('fitting inspector');
   }
 
+  async find(filter = {}, options = {}) {
+    const { skip = 0, limit = 50, sort = { inspectionDate: -1 } } = options;
+    return await Inspection.find(filter)
+      .populate('fitting', 'uniqueQRId itemType status location')
+      .populate('inspector', 'name email')
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .lean();
+  }
+
   async findByFitting(zoneCode, fittingId, options = {}) {
     const validatedZone = validateZoneCode(zoneCode);
     const { skip = 0, limit = 20, sort = { inspectionDate: -1 } } = options;

@@ -1,4 +1,4 @@
-# RailTrack AI - Quick Start Guide
+# RailTrack-FIX - Quick Start Guide
 
 ## 🚀 Get Started in 5 Minutes
 
@@ -20,7 +20,7 @@ cp .env.example .env
 docker-compose up --build
 
 # 4. Wait for services to start (30-60 seconds)
-# You'll see: "RailTrack AI Backend running on port 5000"
+# You'll see: "RailTrack-FIX Backend running on port 5000"
 
 # 5. Test the API
 curl http://localhost:5000/health

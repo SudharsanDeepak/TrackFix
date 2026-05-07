@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { TrendingUp, CheckCircle, Clock } from 'lucide-react'
+import inspectorService from '../../../services/inspectorService'
 
 const DailyStatsWidget = () => {
   const [stats, setStats] = useState({
@@ -10,17 +11,18 @@ const DailyStatsWidget = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Mock data - replace with actual API call
     const fetchDailyStats = async () => {
       try {
-        await new Promise(resolve => setTimeout(resolve, 500))
+        const res = await inspectorService.getDailyStats()
+        const payload = (res && res.data) || res || {}
         setStats({
-          completed: 8,
-          pending: 2,
-          target: 10,
+          completed: payload.completed || 0,
+          pending: payload.pending || 0,
+          target: payload.target || 0,
         })
       } catch (error) {
         console.error('Failed to fetch daily stats:', error)
+        setStats({ completed: 0, pending: 0, target: 0 })
       } finally {
         setLoading(false)
       }

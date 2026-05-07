@@ -4,6 +4,7 @@ const Inspection = require('../inspection/model');
 const TrackFitting = require('../qr/model');
 const Defect = require('../defect/model');
 const CacheService = require('../../services/cacheService');
+const ImageService = require('../../services/imageService');
 
 /**
  * Inspector Service
@@ -75,6 +76,40 @@ class InspectorService {
   }
 
   /**
+   * Get a single inspection by ID for the authenticated inspector
+   * @param {string} inspectionId - Inspection ID
+   * @param {string} userId - Inspector user ID
+   * @returns {Promise<Object>} Inspection
+   */
+  async getInspectionById(inspectionId, userId) {
+    logger.info('Getting inspection by id for inspector', { inspectionId, userId });
+
+    const inspection = await Inspection.findById(inspectionId)
+      .populate('fitting', 'uniqueQRId itemType status')
+      .populate('inspector', 'name email')
+      .lean();
+
+    if (!inspection) {
+      throw new NotFoundError('Inspection not found');
+    }
+
+    if (inspection.inspector?._id?.toString() !== userId) {
+      throw new ForbiddenError('Cannot access inspection assigned to another inspector');
+    }
+
+    if (inspection.images && inspection.images.length > 0) {
+      inspection.images = inspection.images.map(img => {
+        if (img.data && img.data.buffer) {
+          return `data:${img.contentType};base64,${img.data.buffer.toString('base64')}`;
+        }
+        return null;
+      }).filter(img => img !== null);
+    }
+
+    return inspection;
+  }
+
+  /**
    * Start a new inspection
    * @param {Object} data - Inspection data
    * @param {string} userId - Inspector user ID
@@ -117,19 +152,33 @@ class InspectorService {
         inspectionData.coordinates = data.coordinates;
       }
 
-      // Handle images - convert base64 to Buffer
+      // Handle images with optimization
       if (data.images && Array.isArray(data.images) && data.images.length > 0) {
-        inspectionData.images = data.images.map(base64Image => {
-          // Extract content type and base64 data
-          const matches = base64Image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-          if (matches && matches.length === 3) {
-            return {
-              data: Buffer.from(matches[2], 'base64'),
-              contentType: matches[1]
-            };
-          }
-          return null;
-        }).filter(img => img !== null);
+        try {
+          inspectionData.images = await ImageService.processAndStoreImages(data.images, {
+            maxSize: 512 * 1024, // 512KB threshold for GridFS
+            quality: 80,
+            format: 'jpeg',
+            resize: { width: 1024, height: 1024 }
+          });
+          logger.info('Images processed and stored:', { 
+            count: inspectionData.images.length,
+            totalSize: inspectionData.images.reduce((sum, img) => sum + img.size, 0)
+          });
+        } catch (error) {
+          logger.error('Failed to process images:', error);
+          // Fallback to legacy Buffer storage
+          inspectionData.images = data.images.map(base64Image => {
+            const matches = base64Image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+            if (matches && matches.length === 3) {
+              return {
+                data: Buffer.from(matches[2], 'base64'),
+                contentType: matches[1]
+              };
+            }
+            return null;
+          }).filter(img => img !== null);
+        }
       }
     } else {
       throw new ValidationError('Either qrId or assetId must be provided');
@@ -143,8 +192,7 @@ class InspectorService {
       .populate('fitting', 'uniqueQRId itemType status')
       .populate('inspector', 'name email')
       .lean();
-    
-    // Convert Buffer images back to base64 for response
+
     if (populatedInspection.images && populatedInspection.images.length > 0) {
       populatedInspection.images = populatedInspection.images.map(img => {
         if (img.data && img.data.buffer) {
@@ -152,6 +200,29 @@ class InspectorService {
         }
         return null;
       }).filter(img => img !== null);
+    }
+    
+    // Convert images to base64 for response (handle both Buffer and optimized formats)
+    if (populatedInspection.images && populatedInspection.images.length > 0) {
+      populatedInspection.images = await Promise.all(
+        populatedInspection.images.map(async (img) => {
+          try {
+            if (img.type === 'buffer' && img.data) {
+              return `data:${img.contentType};base64,${img.data.toString('base64')}`;
+            } else if (img.type === 'gridfs') {
+              return await ImageService.retrieveImage(img);
+            } else if (img.data && img.data.buffer) {
+              // Legacy Buffer format
+              return `data:${img.contentType};base64,${img.data.buffer.toString('base64')}`;
+            }
+            return null;
+          } catch (error) {
+            logger.error('Failed to retrieve image:', error);
+            return null;
+          }
+        })
+      );
+      populatedInspection.images = populatedInspection.images.filter(img => img !== null);
     }
     
     // Invalidate cache for inspector and depot officer dashboards
@@ -193,12 +264,42 @@ class InspectorService {
     
     // Update inspection with results
     inspection.status = data.status;
+    inspection.assetId = data.assetId || inspection.assetId;
+    inspection.assetType = data.assetType || inspection.assetType;
+    inspection.location = data.location || inspection.location;
+    inspection.notes = data.notes || inspection.notes;
     inspection.findings = data.findings || inspection.findings;
     inspection.defectsFound = data.defectsFound || inspection.defectsFound;
     inspection.overallResult = data.overallResult || inspection.overallResult;
     inspection.recommendations = data.recommendations || inspection.recommendations;
     inspection.nextInspectionDate = data.nextInspectionDate || inspection.nextInspectionDate;
-    inspection.images = data.images || inspection.images;
+    if (data.images && Array.isArray(data.images)) {
+      try {
+        inspection.images = await ImageService.processAndStoreImages(data.images, {
+          maxSize: 512 * 1024, // 512KB threshold for GridFS
+          quality: 80,
+          format: 'jpeg',
+          resize: { width: 1024, height: 1024 }
+        });
+        logger.info('Images processed and stored for inspection update:', { 
+          inspectionId,
+          count: inspection.images.length
+        });
+      } catch (error) {
+        logger.error('Failed to process images for update:', error);
+        // Fallback to legacy Buffer storage
+        inspection.images = data.images.map(base64Image => {
+          const matches = base64Image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+          if (matches && matches.length === 3) {
+            return {
+              data: Buffer.from(matches[2], 'base64'),
+              contentType: matches[1],
+            };
+          }
+          return null;
+        }).filter(img => img !== null);
+      }
+    }
     inspection.signature = data.signature || inspection.signature;
     
     await inspection.save();

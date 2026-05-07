@@ -24,7 +24,7 @@ const InspectorHeader = () => {
             <Train className="w-6 h-6 text-ir-blue" />
           </div>
           <div>
-            <h1 className="text-lg font-bold">RailTrack AI</h1>
+            <h1 className="text-lg font-bold">RailTrack-FIX</h1>
             <p className="text-xs text-blue-100">Inspector</p>
           </div>
         </div>

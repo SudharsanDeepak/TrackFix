@@ -2,7 +2,7 @@
 
 ## ✅ Implementation Complete
 
-Google OAuth has been successfully integrated into the RailTrack AI backend with seamless synchronization between Google and email/password authentication.
+Google OAuth has been successfully integrated into the RailTrack-FIX backend with seamless synchronization between Google and email/password authentication.
 
 ## 🎯 Key Features Implemented
 

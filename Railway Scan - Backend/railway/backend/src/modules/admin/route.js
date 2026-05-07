@@ -139,4 +139,14 @@ router.get(
   adminController.getSystemHealth
 );
 
+// GET /api/v1/admin/inspections - Admin view of all inspections (paginated)
+router.get(
+  '/inspections',
+  authenticate,
+  roleAuthorization([ROLES.ADMIN]),
+  paginate,
+  activityLogger('READ', 'INSPECTION'),
+  adminController.getAllInspections
+);
+
 module.exports = router;

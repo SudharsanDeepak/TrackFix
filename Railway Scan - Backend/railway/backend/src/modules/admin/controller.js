@@ -149,6 +149,24 @@ class AdminController {
     
     ResponseFormatter.success(res, health, 'System health retrieved successfully');
   });
+
+  /**
+   * GET /api/v1/admin/inspections - Admin: list all inspections with pagination
+   */
+  getAllInspections = asyncHandler(async (req, res) => {
+    // Lazy require to avoid circular dependency
+    const inspectionRepository = require('../inspection/repository');
+    const { page = 1, limit = 50 } = req.pagination;
+    const skip = (page - 1) * limit;
+
+    const [inspections, total] = await Promise.all([
+      inspectionRepository.find({}, { skip, limit }),
+      inspectionRepository.count({}),
+    ]);
+
+    const pagination = buildPaginationResponse(total, req.pagination.page, req.pagination.limit);
+    ResponseFormatter.paginated(res, inspections, pagination, 'Inspections retrieved successfully');
+  });
 }
 
 module.exports = new AdminController();

@@ -40,6 +40,17 @@ router.get(
   inspectorController.getInspections
 );
 
+// GET /api/v1/inspector/inspections/:id - Get a single inspection
+router.get(
+  '/inspections/:id',
+  authenticate,
+  roleAuthorization([ROLES.INSPECTOR]),
+  dataFilter(),
+  validateParams(inspectionIdParamSchema),
+  activityLogger('READ', 'INSPECTION'),
+  inspectorController.getInspectionById
+);
+
 // POST /api/v1/inspector/inspections - Start new inspection
 router.post(
   '/inspections',

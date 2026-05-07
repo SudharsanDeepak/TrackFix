@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useRealtimeInspections, useRealtimeFittings } from '../../../hooks/useRealtime'
 import { BarChart3, TrendingUp } from 'lucide-react'
 
 const SystemWideStatsWidget = () => {
@@ -29,6 +30,24 @@ const SystemWideStatsWidget = () => {
 
     fetchStats()
   }, [])
+
+  // Update stats in real-time when inspections or fittings change
+  useRealtimeInspections((update) => {
+    if (update.type === 'CREATED') {
+      setStats(prev => ({ ...prev, totalInspections: prev.totalInspections + 1 }))
+    } else if (update.type === 'FAILED') {
+      setStats(prev => ({ ...prev, totalDefects: prev.totalDefects + 1 }))
+    }
+  })
+
+  useRealtimeFittings((update) => {
+    if (update.type === 'STATUS_CHANGED') {
+      // If a fitting becomes DEFECTIVE, increment defects
+      if (update.data.newStatus === 'DEFECTIVE') {
+        setStats(prev => ({ ...prev, totalDefects: prev.totalDefects + 1 }))
+      }
+    }
+  })
 
   if (loading) {
     return (

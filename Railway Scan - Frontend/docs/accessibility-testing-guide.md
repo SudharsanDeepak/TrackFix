@@ -1,7 +1,7 @@
 # Accessibility Testing Guide
 
 ## Overview
-This guide provides instructions for testing the accessibility features implemented across all role interfaces in the RailTrack AI Frontend.
+This guide provides instructions for testing the accessibility features implemented across all role interfaces in the RailTrack-FIX Frontend.
 
 ## Testing Checklist
 

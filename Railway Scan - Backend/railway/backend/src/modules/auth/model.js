@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
     googleId: {
       type: String,
       sparse: true,
-      index: true,
+      /* index: true */
     },
     authProvider: {
       type: String,
@@ -68,7 +68,7 @@ const userSchema = new mongoose.Schema(
     vendorCode: {
       type: String,
       sparse: true,
-      index: true,
+      /* index: true */
     },
     phone: {
       type: String,

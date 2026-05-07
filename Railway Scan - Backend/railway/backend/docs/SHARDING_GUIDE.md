@@ -1,8 +1,8 @@
-# RailTrack AI - MongoDB Sharding Guide
+# RailTrack-FIX - MongoDB Sharding Guide
 
 ## Overview
 
-This guide explains the sharding architecture for RailTrack AI, designed to support 25+ crore (250 million) TrackFitting records and 100+ crore (1 billion) Inspection records over time.
+This guide explains the sharding architecture for RailTrack-FIX, designed to support 25+ crore (250 million) TrackFitting records and 100+ crore (1 billion) Inspection records over time.
 
 ---
 

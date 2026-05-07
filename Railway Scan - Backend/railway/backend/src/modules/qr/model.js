@@ -7,7 +7,7 @@ const trackFittingSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      index: true,
+      /* index: true */
     },
     zoneCode: {
       type: String,
@@ -46,7 +46,7 @@ const trackFittingSchema = new mongoose.Schema(
     vendorCode: {
       type: String,
       required: true,
-      index: true,
+      /* index: true */
     },
     manufacturingDate: {
       type: Date,

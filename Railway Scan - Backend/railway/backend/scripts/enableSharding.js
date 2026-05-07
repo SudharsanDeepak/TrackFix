@@ -3,7 +3,7 @@
 /**
  * MongoDB Sharding Enablement Script
  * 
- * This script enables sharding for RailTrack AI collections
+ * This script enables sharding for RailTrack-FIX collections
  * Run this ONLY on a sharded MongoDB cluster
  * 
  * Prerequisites:

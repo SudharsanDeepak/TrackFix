@@ -7,6 +7,7 @@ const SystemSettings = require('../../models/SystemSettings.model');
 const CacheService = require('../../services/cacheService');
 const mongoose = require('mongoose');
 const { getRedisClient } = require('../../config/redis');
+const { eventBus, EVENTS } = require('../../utils/eventBus');
 
 /**
  * Admin Service
@@ -131,6 +132,18 @@ class AdminService {
       },
     });
     
+    // Emit user creation event
+    eventBus.emitToRoles(EVENTS.USER_CREATED, {
+      userId: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      depotId: user.depotId,
+      zoneId: user.zoneId,
+      createdBy: adminId,
+      timestamp: new Date(),
+    }, ['ADMIN']);
+    
     // Return user without password
     const userObj = user.toObject();
     delete userObj.password;
@@ -211,6 +224,16 @@ class AdminService {
         after: afterState,
       },
     });
+    
+    // Emit user update event for real-time synchronization
+    eventBus.emitToRoles(EVENTS.USER_UPDATED, {
+      userId: user._id,
+      name: user.name,
+      email: user.email,
+      changes: Object.keys(data).filter(key => data[key] !== beforeState[key]),
+      updatedAt: new Date(),
+      updatedBy: adminId,
+    }, ['ADMIN']);
     
     // Return user without password
     const userObj = user.toObject();
@@ -482,7 +505,7 @@ class AdminService {
     
     const [logs, total] = await Promise.all([
       AuditLog.find(query)
-        .populate('performedBy', 'name email role')
+        .populate({ path: 'performedBy', select: 'name email role', strictPopulate: false })
         .sort({ timestamp: -1 })
         .skip(skip)
         .limit(limit)

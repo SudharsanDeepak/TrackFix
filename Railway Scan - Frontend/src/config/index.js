@@ -31,7 +31,7 @@ export const config = {
   isProduction: import.meta.env.PROD,
 
   // App Info
-  appName: import.meta.env.VITE_APP_NAME || 'RailTrack AI',
+  appName: import.meta.env.VITE_APP_NAME || 'RailTrack-FIX',
   appVersion: import.meta.env.VITE_APP_VERSION || '1.0.0',
 
   // Feature Flags

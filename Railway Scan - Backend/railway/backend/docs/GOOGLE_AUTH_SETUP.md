@@ -2,7 +2,7 @@
 
 ## Overview
 
-RailTrack AI supports seamless authentication with both Google OAuth and traditional email/password. Users can:
+RailTrack-FIX supports seamless authentication with both Google OAuth and traditional email/password. Users can:
 - Sign in with Google (first time creates account)
 - Sign in with email/password (if password is set)
 - Switch between both methods using the same account
@@ -43,12 +43,12 @@ RailTrack AI supports seamless authentication with both Google OAuth and traditi
 3. Enable Google+ API
 4. Go to "Credentials" → "Create Credentials" → "OAuth 2.0 Client ID"
 5. Configure OAuth consent screen:
-   - Application name: RailTrack AI
+  - Application name: RailTrack-FIX
    - User support email: your-email@railtrack.gov.in
    - Authorized domains: railtrack.gov.in
 6. Create OAuth Client ID:
    - Application type: Web application
-   - Name: RailTrack AI Backend
+  - Name: RailTrack-FIX Backend
    - Authorized JavaScript origins:
      - `http://localhost:5000` (development)
      - `https://api.railtrack.gov.in` (production)
@@ -232,7 +232,7 @@ function LoginPage() {
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login - RailTrack AI</title>
+  <title>Login - RailTrack-FIX</title>
 </head>
 <body>
   <h1>Login</h1>

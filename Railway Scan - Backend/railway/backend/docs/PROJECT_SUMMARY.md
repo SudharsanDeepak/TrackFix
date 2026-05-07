@@ -1,8 +1,8 @@
-# RailTrack AI Backend - Project Summary
+# RailTrack-FIX Backend - Project Summary
 
 ## 🎯 Project Overview
 
-**RailTrack AI** is a production-grade, national-scale backend system for the Ministry of Railways, India. It manages the complete lifecycle of railway track fittings with AI-powered predictive monitoring, designed to handle 25+ crore records.
+**RailTrack-FIX** is a production-grade, national-scale backend system for the Ministry of Railways, India. It manages the complete lifecycle of railway track fittings with AI-powered predictive monitoring, designed to handle 25+ crore records.
 
 ## ✅ Implementation Status: COMPLETE
 

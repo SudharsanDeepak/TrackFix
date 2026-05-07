@@ -4,6 +4,7 @@ const { NotFoundError, ValidationError } = require('../../utils/errors');
 const logger = require('../../utils/logger');
 const config = require('../../config');
 const AuditService = require('../audit/service');
+const { eventBus, EVENTS } = require('../../utils/eventBus');
 const { validateZoneCode, extractYearFromDate } = require('../../utils/shardingHelper');
 
 class QRService {
@@ -109,7 +110,21 @@ class QRService {
       throw new NotFoundError('Fitting not found');
     }
     
+    const oldStatus = fitting.status;
     const updated = await qrRepository.updateFitting(fittingId, updateData);
+    
+    // Emit event for real-time synchronization
+    if (updateData.status && updateData.status !== oldStatus) {
+      eventBus.emitToRoles(EVENTS.FITTING_STATUS_CHANGED, {
+        fittingId,
+        uniqueQRId: fitting.uniqueQRId,
+        oldStatus,
+        newStatus: updateData.status,
+        zoneCode: fitting.zoneCode,
+        userId,
+        timestamp: new Date(),
+      }, ['ADMIN', 'DEPOT_OFFICER', 'ZONAL_MANAGER', 'INSPECTOR']);
+    }
     
     await AuditService.log({
       action: 'FITTING_UPDATED',
@@ -148,12 +163,22 @@ class QRService {
   async recallLot(zoneCode, lotNumber, reason, userId) {
     const result = await qrRepository.recallByLot(zoneCode, lotNumber, reason);
     
+    // Emit lot recall event
+    eventBus.emitToRoles(EVENTS.LOT_RECALLED, {
+      zoneCode,
+      lotNumber,
+      reason,
+      affectedCount: result.modifiedCount,
+      userId,
+      timestamp: new Date(),
+    }, ['ADMIN', 'DEPOT_OFFICER', 'ZONAL_MANAGER', 'INSPECTOR']);
+    
     await AuditService.log({
       action: 'LOT_RECALLED',
       userId,
       details: { zoneCode, lotNumber, reason, affectedCount: result.modifiedCount },
     });
-    
+
     logger.warn('Lot recalled:', { zoneCode, lotNumber, reason, affectedCount: result.modifiedCount });
     
     return result;

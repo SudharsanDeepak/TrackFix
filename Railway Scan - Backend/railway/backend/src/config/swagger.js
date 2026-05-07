@@ -5,7 +5,7 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'RailTrack AI API',
+      title: 'RailTrack-FIX API',
       version: '1.0.0',
       description: 'National-scale Railway Track Fitting Lifecycle & Predictive Monitoring System API',
       contact: {

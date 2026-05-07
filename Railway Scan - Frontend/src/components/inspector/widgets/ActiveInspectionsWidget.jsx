@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ClipboardCheck, MapPin, Clock } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import inspectorService from '../../../services/inspectorService'
 
 const ActiveInspectionsWidget = () => {
   const navigate = useNavigate()
@@ -8,29 +9,14 @@ const ActiveInspectionsWidget = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Mock data - replace with actual API call
     const fetchActiveInspections = async () => {
       try {
-        // Simulating API call
-        await new Promise(resolve => setTimeout(resolve, 500))
-        setActiveInspections([
-          {
-            id: 1,
-            assetName: 'Coach A-1234',
-            location: 'Platform 3, Depot A',
-            scheduledTime: '10:00 AM',
-            priority: 'high',
-          },
-          {
-            id: 2,
-            assetName: 'Engine E-5678',
-            location: 'Maintenance Bay 2',
-            scheduledTime: '11:30 AM',
-            priority: 'medium',
-          },
-        ])
+        const res = await inspectorService.getMyInspections({ status: 'assigned', limit: 10 })
+        const items = (res && res.data) || res || []
+        setActiveInspections(items)
       } catch (error) {
         console.error('Failed to fetch active inspections:', error)
+        setActiveInspections([])
       } finally {
         setLoading(false)
       }

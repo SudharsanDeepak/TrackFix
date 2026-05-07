@@ -23,8 +23,15 @@ const createInspectionSchema = Joi.object({
 
 const submitInspectionSchema = Joi.object({
   status: Joi.string().valid(...Object.values(INSPECTION_STATUS)).required(),
-  findings: Joi.string().trim().max(2000).optional(),
-  images: Joi.array().items(Joi.string().uri()).max(10).optional(),
+  assetId: Joi.string().trim().optional(),
+  assetType: Joi.string().trim().optional(),
+  location: Joi.string().trim().optional(),
+  notes: Joi.string().trim().max(1000).optional(),
+  findings: Joi.alternatives().try(
+    Joi.string().trim().max(2000),
+    Joi.object()
+  ).optional(),
+  images: Joi.array().items(Joi.string()).max(10).optional(),
   aiPrediction: Joi.object({
     riskLevel: Joi.string().valid('LOW_RISK', 'MEDIUM_RISK', 'HIGH_RISK', 'CRITICAL').optional(),
     confidence: Joi.number().min(0).max(1).optional(),

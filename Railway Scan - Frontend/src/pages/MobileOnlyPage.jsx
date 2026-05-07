@@ -31,7 +31,7 @@ const MobileOnlyPage = () => {
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <Train className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl font-bold text-gray-900">RailTrack AI</span>
+          <span className="text-xl font-bold text-gray-900">RailTrack-FIX</span>
         </div>
 
         {/* Message */}

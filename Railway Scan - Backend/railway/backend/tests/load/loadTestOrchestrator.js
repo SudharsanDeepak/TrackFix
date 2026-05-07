@@ -253,7 +253,7 @@ class LoadTestOrchestrator {
 
   printSummary() {
     console.log('\n' + '='.repeat(80));
-    console.log('🚆 RAILTRACK AI - LOAD TEST SUMMARY');
+    console.log('🚆 RAILTRACK-FIX - LOAD TEST SUMMARY');
     console.log('='.repeat(80));
     
     console.log(`\nTest Mode: ${this.mode} (${this.config.name})`);
@@ -343,7 +343,7 @@ module.exports = LoadTestOrchestrator;
 if (require.main === module) {
   const mode = process.argv[2] || 'LIGHT_TEST';
   
-  console.log(`\n🚆 RailTrack AI - Load Testing Framework`);
+  console.log(`\n🚆 RailTrack-FIX - Load Testing Framework`);
   console.log(`Mode: ${mode}`);
   console.log(`Available modes: ${Object.keys(TEST_MODES).join(', ')}\n`);
   

@@ -18,6 +18,7 @@ const router = express.Router();
 const apiVersion = config.apiVersion;
 
 router.use(healthRoutes);
+router.use(healthRoutes);
 
 router.use(`/api/${apiVersion}/auth`, authRoutes);
 router.use(`/api/${apiVersion}/vendors`, vendorRoutes);
@@ -36,7 +37,7 @@ router.use(`/api/${apiVersion}/admin`, adminRoutes);
 router.get('/', (_req, res) => {
   res.status(200).json({
     success: true,
-    message: 'RailTrack AI - National Railway Track Fitting Lifecycle & Predictive Monitoring System',
+    message: 'RailTrack-FIX - National Railway Track Fitting Lifecycle & Predictive Monitoring System',
     version: apiVersion,
     documentation: '/api-docs',
   });

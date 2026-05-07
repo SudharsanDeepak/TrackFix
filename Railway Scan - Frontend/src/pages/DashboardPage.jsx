@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '../store/authStore'
 import { StatsGrid, ChartSection, ActivityFeed } from '../components/organisms'
+import apiClient from '../api/client'
 
 const DashboardPage = () => {
   const user = useAuthStore(state => state.user)
@@ -9,94 +10,26 @@ const DashboardPage = () => {
   const [activities, setActivities] = useState([])
   const [loading, setLoading] = useState(true)
 
-  // Mock data - in real app, fetch from API
+  // Fetch real dashboard data from API
   useEffect(() => {
     const fetchDashboardData = async () => {
       setLoading(true)
+      try {
+        const overviewRes = await apiClient.get('/dashboard/overview')
+        const aiRes = await apiClient.get('/dashboard/ai-summary')
 
-      // Simulate API call
-      setTimeout(() => {
-        setStats({
-          totalFittings: 12458,
-          totalFittingsTrend: { direction: 'up', value: '+12%' },
-          activeFittings: 11234,
-          activeFittingsTrend: { direction: 'up', value: '+5%' },
-          highRiskFittings: 156,
-          highRiskTrend: { direction: 'down', value: '-8%' },
-          warrantyExpiring: 89,
-          warrantyExpiringTrend: { direction: 'up', value: '+3%' },
-        })
-
-        setChartData({
-          vendorPerformance: [
-            { name: 'Vendor A', score: 85 },
-            { name: 'Vendor B', score: 92 },
-            { name: 'Vendor C', score: 78 },
-            { name: 'Vendor D', score: 88 },
-            { name: 'Vendor E', score: 95 },
-          ],
-          zoneFailures: [
-            { name: 'Central', value: 45 },
-            { name: 'Western', value: 32 },
-            { name: 'Eastern', value: 28 },
-            { name: 'Northern', value: 38 },
-            { name: 'Southern', value: 25 },
-          ],
-          warrantyTimeline: [
-            { month: 'Jan', expiring: 12, expired: 5 },
-            { month: 'Feb', expiring: 15, expired: 8 },
-            { month: 'Mar', expiring: 18, expired: 6 },
-            { month: 'Apr', expiring: 22, expired: 10 },
-            { month: 'May', expiring: 19, expired: 7 },
-            { month: 'Jun', expiring: 25, expired: 12 },
-          ],
-        })
-
-        setActivities([
-          {
-            id: 1,
-            type: 'inspection',
-            user: 'John Doe',
-            action: 'completed inspection',
-            description: 'Batch #1234 - 50 fittings inspected',
-            timestamp: new Date(Date.now() - 1800000),
-          },
-          {
-            id: 2,
-            type: 'qr_generated',
-            user: 'Jane Smith',
-            action: 'generated QR codes',
-            description: '100 new QR codes for Central Zone',
-            timestamp: new Date(Date.now() - 3600000),
-          },
-          {
-            id: 3,
-            type: 'prediction',
-            user: 'AI System',
-            action: 'detected high-risk fitting',
-            description: 'QR-2024-001234 has risk score of 85',
-            timestamp: new Date(Date.now() - 7200000),
-          },
-          {
-            id: 4,
-            type: 'report',
-            user: 'Admin User',
-            action: 'generated vendor ranking report',
-            description: 'Q1 2024 Performance Report',
-            timestamp: new Date(Date.now() - 10800000),
-          },
-          {
-            id: 5,
-            type: 'user',
-            user: 'Mike Johnson',
-            action: 'updated vendor information',
-            description: 'Vendor ABC Ltd. contact details updated',
-            timestamp: new Date(Date.now() - 14400000),
-          },
-        ])
-
+        // `apiClient` returns ResponseFormatter payload directly
+        setStats(overviewRes.data || overviewRes || {})
+        setChartData({ vendorPerformance: aiRes || [] })
+        setActivities([]) // Activities should come from real event feed / activity API
+      } catch (err) {
+        console.error('Failed to load dashboard data:', err)
+        setStats(null)
+        setChartData(null)
+        setActivities([])
+      } finally {
         setLoading(false)
-      }, 1000)
+      }
     }
 
     fetchDashboardData()

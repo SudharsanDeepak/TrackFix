@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useRealtimeInspections, useRealtimeFittings, useRealtimeSystem } from '../../../hooks/useRealtime'
 import { FileText, User, Clock } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
@@ -26,6 +27,37 @@ const ActivityLogsWidget = () => {
 
     fetchLogs()
   }, [])
+
+  // Append real-time events to activity logs
+  useRealtimeInspections((update) => {
+    const entry = {
+      id: Date.now(),
+      user: update.data.inspectorId || 'System',
+      action: update.type === 'CREATED' ? `Created inspection (${update.data.result})` : `Inspection ${update.type.toLowerCase()}`,
+      time: 'just now',
+    }
+    setLogs(prev => [entry, ...prev].slice(0, 20))
+  })
+
+  useRealtimeFittings((update) => {
+    const entry = {
+      id: Date.now() + 1,
+      user: update.data.userId || 'System',
+      action: update.type === 'STATUS_CHANGED' ? `Fitting status changed to ${update.data.newStatus}` : 'Fitting updated',
+      time: 'just now',
+    }
+    setLogs(prev => [entry, ...prev].slice(0, 20))
+  })
+
+  useRealtimeSystem((update) => {
+    const entry = {
+      id: Date.now() + 2,
+      user: update.data?.updatedBy || 'System',
+      action: update.type === 'USER_CREATED' ? `User created: ${update.data?.email || update.data?.name}` : 'System update',
+      time: 'just now',
+    }
+    setLogs(prev => [entry, ...prev].slice(0, 20))
+  })
 
   if (loading) {
     return (

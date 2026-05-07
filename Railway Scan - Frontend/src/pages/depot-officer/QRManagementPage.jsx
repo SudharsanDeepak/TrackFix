@@ -68,57 +68,18 @@ const QRManagementPage = () => {
         // TODO: Replace with actual API call
         // const data = await qrService.getQRCodes()
 
-        // Mock data
-        const mockData = [
-          {
-            id: 'QR-001',
-            code: 'TRK-2024-001',
-            assetType: 'track',
-            location: 'Platform 3, Section A',
-            status: 'assigned',
-            generatedDate: '2024-01-10T10:00:00',
-            assignedTo: 'Inspector John',
-          },
-          {
-            id: 'QR-002',
-            code: 'SIG-2024-045',
-            assetType: 'signal',
-            location: 'Junction Point B',
-            status: 'active',
-            generatedDate: '2024-01-12T14:30:00',
-            assignedTo: null,
-          },
-          {
-            id: 'QR-003',
-            code: 'BRG-2024-012',
-            assetType: 'bridge',
-            location: 'Bridge 12, KM 45',
-            status: 'active',
-            generatedDate: '2024-01-15T09:15:00',
-            assignedTo: null,
-          },
-          {
-            id: 'QR-004',
-            code: 'STN-2024-003',
-            assetType: 'station',
-            location: 'Main Station Building',
-            status: 'assigned',
-            generatedDate: '2024-01-08T11:20:00',
-            assignedTo: 'Inspector Sarah',
-          },
-          {
-            id: 'QR-005',
-            code: 'TRK-2024-089',
-            assetType: 'track',
-            location: 'Platform 1, Section C',
-            status: 'inactive',
-            generatedDate: '2024-01-05T16:45:00',
-            assignedTo: null,
-          },
-        ]
-
-        setQrCodes(mockData)
-        setFilteredCodes(mockData)
+        // Fetch real data from API (no sample/mock data)
+        try {
+          const res = await qrService.searchFittings({})
+          // ResponseFormatter returns { success, message, data, pagination }
+          const items = (res && res.data) || []
+          setQrCodes(items)
+          setFilteredCodes(items)
+        } catch (err) {
+          console.error('Failed to fetch QR codes from API:', err)
+          setQrCodes([])
+          setFilteredCodes([])
+        }
       } catch (error) {
         console.error('Failed to fetch QR codes:', error)
       } finally {

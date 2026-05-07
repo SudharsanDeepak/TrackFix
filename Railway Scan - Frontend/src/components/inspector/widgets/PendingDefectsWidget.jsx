@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import inspectorService from '../../../services/inspectorService'
 
 const PendingDefectsWidget = () => {
   const navigate = useNavigate()
@@ -8,13 +9,14 @@ const PendingDefectsWidget = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Mock data - replace with actual API call
     const fetchPendingDefects = async () => {
       try {
-        await new Promise(resolve => setTimeout(resolve, 500))
-        setPendingCount(3)
+        const res = await inspectorService.getMyDefectReports({ status: 'open', limit: 50 })
+        const items = (res && res.data) || res || []
+        setPendingCount(items.length)
       } catch (error) {
         console.error('Failed to fetch pending defects:', error)
+        setPendingCount(0)
       } finally {
         setLoading(false)
       }

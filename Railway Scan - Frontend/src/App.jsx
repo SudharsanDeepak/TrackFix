@@ -8,7 +8,7 @@ import './i18n'
 function App() {
   return (
     <GoogleOAuthProvider clientId={config.googleClientId}>
-      <BrowserRouter>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AppRoutes />
         <Toaster
           position="top-right"

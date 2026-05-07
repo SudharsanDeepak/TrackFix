@@ -1,5 +1,5 @@
 {
-  "name": "railtrack-ai-frontend",
+  "name": "railtrack-fix-frontend",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -30,6 +30,7 @@
     "react-i18next": "^14.0.0",
     "react-router-dom": "^6.21.0",
     "recharts": "^2.10.3",
+    "socket.io-client": "^4.8.3",
     "yup": "^1.3.3",
     "zustand": "^4.4.7"
   },

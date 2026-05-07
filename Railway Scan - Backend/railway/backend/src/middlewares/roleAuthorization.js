@@ -34,29 +34,9 @@ const roleAuthorization = (allowedRoles = [], requiredPermissions = []) => {
     const user = req.user;
     const userRole = user.role;
 
-    // Validate X-User-Role header
-    const headerRole = req.headers['x-user-role'];
-    
-    if (!headerRole) {
-      // Log authorization failure
-      try {
-        await logAuthorizationFailure(req, 'Missing X-User-Role header');
-      } catch (logError) {
-        // Ignore logging errors
-      }
-      throw new ValidationError('X-User-Role header is required');
-    }
-
-    // Validate header role matches user's actual role
-    if (headerRole !== userRole) {
-      // Log authorization failure
-      try {
-        await logAuthorizationFailure(req, `X-User-Role header mismatch: ${headerRole} vs ${userRole}`);
-      } catch (logError) {
-        // Ignore logging errors
-      }
-      throw new AuthorizationError('X-User-Role header does not match user role');
-    }
+    // We already have userRole securely extracted from JWT
+    // const headerRole = req.headers['x-user-role'];
+    // ... removed redundant header validation ...
 
     // ADMIN role has access to all routes (role hierarchy)
     if (userRole === ROLES.ADMIN) {

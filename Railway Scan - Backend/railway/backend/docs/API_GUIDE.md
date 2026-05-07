@@ -1,8 +1,8 @@
-# RailTrack AI - API Integration Guide
+# RailTrack-FIX - API Integration Guide
 
 ## Overview
 
-This guide provides detailed information for integrating with the RailTrack AI backend system.
+This guide provides detailed information for integrating with the RailTrack-FIX backend system.
 
 ## Base URL
 

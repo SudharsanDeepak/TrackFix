@@ -45,58 +45,12 @@ const ReportsPage = () => {
   const [loading, setLoading] = useState(false)
   const [exportFormat, setExportFormat] = useState('pdf')
 
-  // Mock data for trend analysis
-  const performanceTrendData = useMemo(
-    () => [
-      { month: 'Jan', inspections: 1245, defects: 98, efficiency: 88, cost: 2.3 },
-      { month: 'Feb', inspections: 1389, defects: 87, efficiency: 91, cost: 2.1 },
-      { month: 'Mar', inspections: 1456, defects: 102, efficiency: 89, cost: 2.4 },
-      { month: 'Apr', inspections: 1523, defects: 94, efficiency: 92, cost: 2.0 },
-      { month: 'May', inspections: 1678, defects: 89, efficiency: 94, cost: 1.9 },
-      { month: 'Jun', inspections: 1780, defects: 85, efficiency: 95, cost: 1.8 },
-    ],
-    []
-  )
-
-  const depotComparisonData = useMemo(
-    () => [
-      { depot: 'Depot A', q1: 456, q2: 489, q3: 512, q4: 534, target: 500 },
-      { depot: 'Depot B', q1: 389, q2: 412, q3: 445, q4: 478, target: 450 },
-      { depot: 'Depot C', q1: 512, q2: 534, q3: 556, q4: 589, target: 550 },
-      { depot: 'Depot D', q1: 423, q2: 445, q3: 467, q4: 490, target: 475 },
-    ],
-    []
-  )
-
-  const defectTrendData = useMemo(
-    () => [
-      { week: 'W1', structural: 12, electrical: 8, mechanical: 6, safety: 3 },
-      { week: 'W2', structural: 10, electrical: 9, mechanical: 7, safety: 2 },
-      { week: 'W3', structural: 14, electrical: 7, mechanical: 5, safety: 4 },
-      { week: 'W4', structural: 11, electrical: 10, mechanical: 8, safety: 3 },
-    ],
-    []
-  )
-
-  const resourceUtilizationData = useMemo(
-    () => [
-      { name: 'Inspectors', value: 85, color: '#9333EA' },
-      { name: 'Equipment', value: 78, color: '#3B82F6' },
-      { name: 'Vehicles', value: 92, color: '#10B981' },
-      { name: 'Budget', value: 73, color: '#F59E0B' },
-    ],
-    []
-  )
-
-  const costAnalysisData = useMemo(
-    () => [
-      { category: 'Labor', amount: 4500000, percentage: 45 },
-      { category: 'Equipment', amount: 2500000, percentage: 25 },
-      { category: 'Materials', amount: 1800000, percentage: 18 },
-      { category: 'Maintenance', amount: 1200000, percentage: 12 },
-    ],
-    []
-  )
+  // Data should come from real APIs; initialize empty to avoid sample data
+  const performanceTrendData = useMemo(() => [], [])
+  const depotComparisonData = useMemo(() => [], [])
+  const defectTrendData = useMemo(() => [], [])
+  const resourceUtilizationData = useMemo(() => [], [])
+  const costAnalysisData = useMemo(() => [], [])
 
   // Report templates
   const reportTemplates = [
@@ -163,6 +117,19 @@ const ReportsPage = () => {
 
   // Calculate summary metrics
   const summaryMetrics = useMemo(() => {
+    if (!performanceTrendData || performanceTrendData.length < 2) {
+      return {
+        totalInspections: 0,
+        inspectionChange: '0.0',
+        totalDefects: 0,
+        defectChange: '0.0',
+        efficiency: 0,
+        efficiencyChange: '0.0',
+        avgCost: 0,
+        costChange: '0.0',
+      }
+    }
+
     const latestData = performanceTrendData[performanceTrendData.length - 1]
     const previousData = performanceTrendData[performanceTrendData.length - 2]
 
@@ -756,7 +723,7 @@ const ReportsPage = () => {
               onClick={handleExport}
               className="bg-purple-600 hover:bg-purple-700 text-white"
             >
-              {exportFormat === 'pdf' && <FilePdf className="h-4 w-4 mr-2" />}
+              {exportFormat === 'pdf' && <FileDown className="h-4 w-4 mr-2" />}
               {exportFormat === 'excel' && <FileSpreadsheet className="h-4 w-4 mr-2" />}
               {exportFormat === 'csv' && <Download className="h-4 w-4 mr-2" />}
               Export as {exportFormat.toUpperCase()}

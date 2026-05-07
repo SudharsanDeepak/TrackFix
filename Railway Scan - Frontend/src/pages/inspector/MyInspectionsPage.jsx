@@ -24,6 +24,7 @@ import { useAuthStore } from '../../store/authStore'
 import { inspectionService } from '../../api/services'
 import apiClient from '../../api/client'
 import toast from 'react-hot-toast'
+import { useRealtimeInspections } from '../../hooks/useRealtime'
 
 const MyInspectionsPage = () => {
   const navigate = useNavigate()
@@ -134,6 +135,33 @@ const MyInspectionsPage = () => {
 
     setFilteredInspections(filtered)
   }, [searchQuery, statusFilter, inspections])
+
+  // Real-time updates
+  useRealtimeInspections((update) => {
+    if (!update?.data) return
+
+    if (update.type === 'CREATED') {
+      const i = update.data.inspection || update.data
+      const transformed = {
+        id: i._id || i.id,
+        assetId: i.assetId || i.fittingId || i.uniqueQRId || '',
+        assetType: i.assetType || i.itemType || '',
+        location: i.location || i.zoneCode || '',
+        status: i.overallResult || i.status || 'PENDING',
+        date: i.inspectionDate || i.createdAt || new Date(),
+        notes: i.notes || i.description || '',
+        images: i.images || [],
+      }
+      setInspections(prev => [transformed, ...prev])
+      setFilteredInspections(prev => [transformed, ...prev])
+    }
+
+    if (update.type === 'UPDATED') {
+      const upd = update.data
+      setInspections(prev => prev.map(it => it.id === upd.inspectionId ? { ...it, ...upd.updates } : it))
+      setFilteredInspections(prev => prev.map(it => it.id === upd.inspectionId ? { ...it, ...upd.updates } : it))
+    }
+  })
 
   // Get status badge
   const getStatusBadge = status => {

@@ -4,6 +4,8 @@ const { NotFoundError } = require('../../utils/errors');
 const logger = require('../../utils/logger');
 const AuditService = require('../audit/service');
 const { extractYearFromDate } = require('../../utils/shardingHelper');
+const { eventBus, EVENTS } = require('../../utils/eventBus');
+const { broadcastToRoles, broadcastToZone } = require('../../config/socket');
 
 class InspectionService {
   async create(inspectionData, inspectorId) {
@@ -47,6 +49,17 @@ class InspectionService {
         result: inspectionData.overallResult,
       },
     });
+
+    // Emit event for real-time updates across all roles
+    eventBus.emitToRoles(EVENTS.INSPECTION_CREATED, {
+      inspectionId: inspection._id,
+      fittingId: inspectionData.fittingId,
+      zoneCode: fitting.zoneCode,
+      result: inspectionData.overallResult,
+      inspectorId,
+      timestamp: inspectionDate,
+      inspection,
+    }, ['ADMIN', 'DEPOT_OFFICER', 'ZONAL_MANAGER', 'INSPECTOR']);
 
     logger.info('Inspection created:', {
       inspectionId: inspection._id,
@@ -93,6 +106,17 @@ class InspectionService {
   async update(id, updateData, userId) {
     const inspection = await this.getById(id);
     const updated = await inspectionRepository.update(id, updateData);
+
+    // Emit update event for real-time synchronization
+    eventBus.emitToRoles(EVENTS.INSPECTION_UPDATED, {
+      inspectionId: id,
+      updates: updateData,
+      zoneCode: inspection.zoneCode,
+      previousStatus: inspection.overallResult,
+      newStatus: updateData.overallResult,
+      userId,
+      timestamp: new Date(),
+    }, ['ADMIN', 'DEPOT_OFFICER', 'ZONAL_MANAGER', 'INSPECTOR']);
 
     await AuditService.log({
       action: 'INSPECTION_UPDATED',

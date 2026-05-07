@@ -5,6 +5,8 @@ const { connectRedis, closeRedis } = require('./config/redis');
 const logger = require('./utils/logger');
 const jobScheduler = require('./jobs');
 const { setupEventListeners } = require('./events');
+const http = require('http');
+const { initializeSocket } = require('./config/socket');
 
 let server;
 
@@ -18,12 +20,19 @@ const startServer = async () => {
     
     jobScheduler.start();
     
-    server = app.listen(config.port, () => {
-      console.log(`\n🚀 RailTrack AI Backend`);
+    // Create HTTP server for socket.io
+    const httpServer = http.createServer(app);
+    
+    // Initialize socket.io
+    initializeSocket(httpServer);
+    
+    server = httpServer.listen(config.port, () => {
+      console.log(`\n🚀 RailTrack-FIX Backend`);
       console.log(`   Port: ${config.port}`);
       console.log(`   Environment: ${config.env}`);
       console.log(`   API Docs: http://localhost:${config.port}/api-docs`);
-      console.log(`   Health: http://localhost:${config.port}/health\n`);
+      console.log(`   Health: http://localhost:${config.port}/health`);
+      console.log(`   WebSocket: ws://localhost:${config.port}\n`);
     });
     
     server.on('error', (error) => {

@@ -52,7 +52,7 @@ class IntegrationService {
 
   formatUDMPayload(data) {
     return {
-      source: 'RailTrack-AI',
+      source: 'RailTrack-FIX',
       timestamp: new Date().toISOString(),
       records: data.map((item) => ({
         qrId: item.uniqueQRId,
@@ -67,7 +67,7 @@ class IntegrationService {
 
   formatTMSPayload(data) {
     return {
-      source: 'RailTrack-AI',
+      source: 'RailTrack-FIX',
       timestamp: new Date().toISOString(),
       trackFittings: data.map((item) => ({
         identifier: item.uniqueQRId,

@@ -1,4 +1,4 @@
-# 📚 RailTrack AI - Documentation Index
+# 📚 RailTrack-FIX - Documentation Index
 
 ## 🎯 Start Here
 
@@ -212,7 +212,7 @@ POST /api/v1/ai/predict
 
 ## 🔗 External Resources
 
-- **Postman Collection**: `../postman/RailTrack-AI.postman_collection.json`
+- **Postman Collection**: `../postman/RailTrack-FIX.postman_collection.json`
 - **Environment File**: `../.env.example`
 - **Test Scripts**: `../tests/`
 - **Load Tests**: `../tests/load/`

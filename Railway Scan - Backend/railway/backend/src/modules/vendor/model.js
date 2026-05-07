@@ -8,7 +8,7 @@ const vendorSchema = new mongoose.Schema(
       unique: true,
       uppercase: true,
       trim: true,
-      index: true,
+      /* index: true */
     },
     name: {
       type: String,

@@ -1,9 +1,10 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import {
   BarChart3,
   TrendingUp,
   AlertTriangle,
   Users,
+  ClipboardCheck,
   Download,
   Calendar,
   Filter,
@@ -69,28 +70,23 @@ const ZoneAnalyticsPage = () => {
     ]
   }, [apiData])
 
-  const depotPerformanceData = useMemo(() => [
-    { depot: 'Loading...', inspections: 0, defects: 0, efficiency: 0 },
-  ], [])
+  const depotPerformanceData = useMemo(() => {
+    const raw = apiData?.trends?.data || apiData?.trends
+    if (Array.isArray(raw) && raw.length > 0) return raw
+    return []
+  }, [apiData])
 
-  const defectCategoryData = useMemo(
-    () => [
-      { name: 'Structural', value: 45, color: '#EF4444' },
-      { name: 'Electrical', value: 32, color: '#F59E0B' },
-      { name: 'Mechanical', value: 28, color: '#3B82F6' },
-      { name: 'Safety', value: 15, color: '#10B981' },
-    ],
-    []
-  )
+  const defectCategoryData = useMemo(() => {
+    const raw = apiData?.defects?.categories || apiData?.defects
+    if (Array.isArray(raw) && raw.length > 0) return raw
+    return []
+  }, [apiData])
 
-  const comparisonData = useMemo(
-    () => [
-      { metric: 'Inspections', current: 0, previous: 0, change: 0 },
-      { metric: 'Defects', current: 0, previous: 0, change: 0 },
-      { metric: 'Completion Rate', current: 0, previous: 0, change: 0 },
-    ],
-    []
-  )
+  const comparisonData = useMemo(() => {
+    const raw = apiData?.comparison || null
+    if (Array.isArray(raw) && raw.length > 0) return raw
+    return []
+  }, [apiData])
 
   const timeRangeOptions = [
     { value: '7', label: 'Last 7 Days' },
@@ -208,38 +204,47 @@ const ZoneAnalyticsPage = () => {
         <StatCard
           icon={BarChart3}
           label="Total Inspections"
-          value="1,780"
-          trend="up"
-          trendValue="+7.6%"
+          value={
+            apiData?.trends?.totalInspections ||
+            (Array.isArray(apiData?.trends?.data)
+              ? apiData.trends.data.reduce((sum, item) => sum + (item.inspections || 0), 0)
+              : '—')
+          }
+          trend={apiData?.trends?.trendDirection || 'up'}
+          trendValue={apiData?.trends?.trendValue || '0.0%'}
           variant="blue"
         />
         <StatCard
           icon={AlertTriangle}
           label="Total Defects"
-          value="140"
-          trend="down"
-          trendValue="-16.7%"
-          variant="green"
-        />
-        <StatCard
-          icon={TrendingUp}
-          label="Completion Rate"
-          value="92.5%"
-          trend="up"
-          trendValue="+4.8%"
-          variant="green"
+          value={
+            apiData?.defects?.totalDefects ||
+            (Array.isArray(apiData?.defects?.data)
+              ? apiData.defects.data.reduce((sum, item) => sum + (item.count || item.defects || 0), 0)
+              : '—')
+          }
+          trend={apiData?.defects?.trendDirection || 'down'}
+          trendValue={apiData?.defects?.trendValue || '0.0%'}
+          variant="red"
         />
         <StatCard
           icon={Users}
-          label="Active Inspectors"
-          value="48"
-          trend="up"
-          trendValue="+2"
-          variant="blue"
+          label="Completion Rate"
+          value={apiData?.trends?.completionRate ? `${apiData.trends.completionRate}%` : '—'}
+          trend={apiData?.trends?.completionTrend || 'up'}
+          trendValue={apiData?.trends?.completionChange || '0.0%'}
+          variant="green"
+        />
+        <StatCard
+          icon={ClipboardCheck}
+          label="Avg Response Time"
+          value={apiData?.trends?.avgResponseTime ? `${apiData.trends.avgResponseTime} ms` : '—'}
+          trend={apiData?.trends?.responseTimeTrend || 'down'}
+          trendValue={apiData?.trends?.responseTimeChange || '0.0%'}
+          variant="purple"
         />
       </div>
 
-      {/* Inspection Trends Chart */}
       <ChartCard
         title="Inspection Trends"
         headerAction={

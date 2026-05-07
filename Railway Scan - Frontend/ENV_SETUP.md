@@ -53,7 +53,7 @@ npm run dev
 
 **`VITE_APP_NAME`**
 - **Description:** Application name (displayed in UI)
-- **Default:** `RailTrack AI`
+- **Default:** `RailTrack-FIX`
 
 **`VITE_APP_VERSION`**
 - **Description:** Application version

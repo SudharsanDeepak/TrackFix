@@ -1,8 +1,8 @@
-# RailTrack AI - System Architecture
+# RailTrack-FIX - System Architecture
 
 ## Overview
 
-RailTrack AI is a national-scale backend system designed for Indian Railways to manage track fitting lifecycle and predictive monitoring. The system is built to handle 25+ crore records with high availability and performance.
+RailTrack-FIX is a national-scale backend system designed for Indian Railways to manage track fitting lifecycle and predictive monitoring. The system is built to handle 25+ crore records with high availability and performance.
 
 ## Architecture Principles
 
@@ -55,7 +55,7 @@ RailTrack AI is a national-scale backend system designed for Indian Railways to 
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                  RailTrack AI Backend                    │
+│                  RailTrack-FIX Backend                    │
 └─────────────────────────────────────────────────────────┘
                     │           │
         ┌───────────┘           └───────────┐
@@ -417,4 +417,4 @@ MongoDB Replica Set
 
 **Document Version**: 1.0  
 **Last Updated**: March 2026  
-**Maintained By**: RailTrack AI Development Team
+**Maintained By**: RailTrack-FIX Development Team

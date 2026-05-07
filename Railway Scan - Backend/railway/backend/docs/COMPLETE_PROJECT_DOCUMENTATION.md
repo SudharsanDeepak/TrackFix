@@ -1,4 +1,4 @@
-# 🚆 RailTrack AI - Complete Project Documentation
+# 🚆 RailTrack-FIX - Complete Project Documentation
 
 ## 📋 Table of Contents
 
@@ -20,9 +20,9 @@
 
 ## 1. Project Overview
 
-### What is RailTrack AI?
+### What is RailTrack-FIX?
 
-RailTrack AI is a **National-Scale Railway Track Fitting Lifecycle & Predictive Monitoring System** designed for Indian Railways to manage and monitor 25+ crore track fittings across 16 railway zones.
+RailTrack-FIX is a **National-Scale Railway Track Fitting Lifecycle & Predictive Monitoring System** designed for Indian Railways to manage and monitor 25+ crore track fittings across 16 railway zones.
 
 ### Key Features
 
@@ -2814,8 +2814,8 @@ See `docs/LOAD_TESTING_GUIDE.md` for details.
 
 **Import Collection:**
 1. Open Postman
-2. Import `postman/RailTrack-AI.postman_collection.json`
-3. Import `postman/RailTrack-AI.postman_environment.json`
+2. Import `postman/RailTrack-FIX.postman_collection.json`
+3. Import `postman/RailTrack-FIX.postman_environment.json`
 4. Set environment variables
 5. Run collection
 
@@ -3070,7 +3070,7 @@ See `docs/LOAD_TESTING_GUIDE.md` for details.
 
 ### 18.2 Postman Collection
 
-**Location:** `postman/RailTrack-AI.postman_collection.json`
+**Location:** `postman/RailTrack-FIX.postman_collection.json`
 
 **Includes:**
 - All API endpoints

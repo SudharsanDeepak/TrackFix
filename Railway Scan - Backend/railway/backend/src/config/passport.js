@@ -25,8 +25,9 @@ if (config.google.clientId && config.google.clientSecret) {
         clientSecret: config.google.clientSecret,
         callbackURL: config.google.callbackUrl,
         scope: ['profile', 'email'],
+        passReqToCallback: true
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (req, accessToken, refreshToken, profile, done) => {
         try {
           const email = profile.emails[0].value;
           const googleId = profile.id;
@@ -56,19 +57,24 @@ if (config.google.clientId && config.google.clientSecret) {
               });
             }
           } else {
+            // Determine role based on where the auth request originated
+            const state = req.query.state || req.session?.oauthState || 'web';
+            const defaultRole = state === 'mobile' ? 'INSPECTOR' : 'VENDOR';
+
             user = await User.create({
               name,
               email,
               googleId,
               authProvider: 'google',
               profilePicture,
-              role: 'VENDOR',
+              role: defaultRole,
               isActive: true,
             });
 
             logger.info('Created new user via Google OAuth:', { 
               userId: user._id, 
-              email: user.email 
+              email: user.email,
+              role: defaultRole
             });
           }
 
